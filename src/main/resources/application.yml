@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/restapi
+    driver-class-name: org.h2.Driver
+    username: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    showSql: true
+    hibernate:
+      ddl-auto: update # db 스키마 비교하여 필요한 테이블이나 컬럼 없을때 도메인 객체에 맞춰 update
+  jwt:
+    secret: govlepel@$&amp;
