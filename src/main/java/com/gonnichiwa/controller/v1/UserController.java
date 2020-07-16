@@ -10,6 +10,7 @@ import com.gonnichiwa.service.ResponseService;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,8 @@ public class UserController {
 	private final UserJpaRepo userJpaRepo;
 	private final ResponseService responseService; // 결과를 처리할 api
 
+	private final PasswordEncoder passwordEncoder;
+
 	@ApiOperation(value = "회원 조회", notes = "모든 회원을 조회한다")
 	@ApiImplicitParams(
 			{@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")}
@@ -45,31 +48,21 @@ public class UserController {
 		return responseService.getListResult(userJpaRepo.findAll());
 	}
 
-	@ApiOperation(value = "회원 입력", notes = "회원을 입력한다.")
-	@ApiImplicitParams(
-			{@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")}
-	)
-	@PostMapping(value = "/user")
-	public SingleResult<User> save(@ApiParam(value = "회원 아이디", required = true) @RequestParam String uid,
-								   @ApiParam(value = "회원 이름", required = true) @RequestParam String name) {
-		User user = User.builder()
-				.uid(uid)
-				.name(name)
-				.build();
-		return responseService.getSingleResult(userJpaRepo.save(user));
-	}
-
 	@ApiOperation(value = "회원 수정", notes = "회원번호(msrl)로 회원 정보를 수정한다")
 	@ApiImplicitParams(
 			{@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")}
 	)
 	@PutMapping(value = "/user")
 	public SingleResult<User> modify(
-			@ApiParam(value = "회원번호", required = true) @RequestParam long	msrl,
-			@ApiParam(value = "회원이름", required = true) @RequestParam String name) {
+			@ApiParam(value = "회원번호", required = true) @RequestParam long   msrl,
+			@ApiParam(value = "회원이름", required = true) @RequestParam String name,
+			@ApiParam(value = "회원아이디", required = true) @RequestParam String uid,
+			@ApiParam(value = "비밀번호", required = true) @RequestParam String password) {
 		User user = User.builder()
 				.msrl(msrl)
 				.name(name)
+				.uid(uid)
+				.password(passwordEncoder.encode(password))
 				.build();
 		return responseService.getSingleResult(userJpaRepo.save(user));
 	}
