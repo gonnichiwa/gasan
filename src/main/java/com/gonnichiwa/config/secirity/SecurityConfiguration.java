@@ -32,8 +32,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 				.authorizeRequests()
-					.antMatchers("/*/signin", "/*/signup").permitAll() //가입과 인증 주소는 누구나 접근 가능
+					.antMatchers("/*/signin", "/*/signup").permitAll() 		  // 가입과 인증 주소는 누구나 접근 가능
 					.antMatchers(HttpMethod.GET, "/helloworld/**").permitAll() // GET /helloworld 요청일 경우 누구나 접근 가능.
+					.antMatchers("/websocket").permitAll() 					  // /websocket요청 누구나 접근 가능.
 					.anyRequest().hasRole("USER") // 그외 요청은 모두 인증된 회원만 접근 가능.
 			.and()
 				.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣는다.

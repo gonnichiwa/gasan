@@ -36,6 +36,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // websocket
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.4.RELEASE'
+
     // DB CONNECTION : H2 & (mysql | mariadb)
     implementation 'com.h2database:h2'
     implementation 'mysql:mysql-connector-java'
